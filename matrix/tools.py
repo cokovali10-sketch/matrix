@@ -14,8 +14,37 @@ class ToolRegistry:
         self.tools_dir = Path(tools_dir) if tools_dir else None
         self.storage = storage
         self.tools: dict[str, Tool] = {}
+        self.usage: dict[str, int] = {}
         if tools_dir:
             self._load(tools_dir)
+
+    def record_usage(self, tool_id: str):
+        self.usage[tool_id] = self.usage.get(tool_id, 0) + 1
+
+    def recommend(self, task_description: str, limit: int = 5) -> list[Tool]:
+        q = task_description.lower()
+        scored = []
+        for t in self.tools.values():
+            haystack = " ".join([t.id, t.name, t.description] + t.tags).lower()
+            score = sum(1 for w in q.split() if w in haystack)
+            score += self.usage.get(t.id, 0) * 0.1
+            if score > 0:
+                scored.append((score, t))
+        scored.sort(key=lambda x: -x[0])
+        return [t for _, t in scored[:limit]]
+
+    def chain(self, tool_ids: list[str], initial_input: Any = None) -> list[Any]:
+        """Execute a sequence of tools, passing output of one as input to next."""
+        results = [initial_input]
+        for tid in tool_ids:
+            tool = self.get(tid)
+            if tool is None:
+                results.append({"error": f"unknown tool {tid}"})
+                break
+            self.record_usage(tid)
+            results.append({"tool": tid, "input": results[-1]})
+        return results
+
 
     def _load(self, tools_dir):
         d = Path(tools_dir)

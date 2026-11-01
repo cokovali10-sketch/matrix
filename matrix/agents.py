@@ -61,8 +61,38 @@ DEFAULT_ROLES = [
 class AgentSpace:
     def __init__(self, roles=None):
         self.roles: dict[str, AgentRole] = {}
+        self.performance: dict[str, dict] = {}
         for role in (roles or DEFAULT_ROLES):
             self.roles[role.id] = role
+            self.performance[role.id] = {"attempts": 0, "successes": 0}
+
+    def record_performance(self, role_id: str, success: bool):
+        if role_id not in self.performance:
+            self.performance[role_id] = {"attempts": 0, "successes": 0}
+        self.performance[role_id]["attempts"] += 1
+        if success:
+            self.performance[role_id]["successes"] += 1
+
+    def success_rate(self, role_id: str) -> float:
+        p = self.performance.get(role_id, {"attempts": 0, "successes": 0})
+        return (p["successes"] / p["attempts"]) if p["attempts"] else 0.0
+
+    def recommend_role(self, task_description: str) -> AgentRole | None:
+        candidates = self.find_for_task(task_description)
+        if not candidates:
+            return None
+        # prefer role with best success rate among candidates
+        candidates.sort(key=lambda r: -self.success_rate(r.id))
+        return candidates[0]
+
+    def collaborate(self, task_description: str) -> list[AgentRole]:
+        """Return ordered list of roles for a multi-agent task."""
+        roles = self.find_for_task(task_description)
+        # always include reviewer if not present
+        if "reviewer" in self.roles and not any(r.id == "reviewer" for r in roles):
+            roles = roles + [self.roles["reviewer"]]
+        return roles
+
 
     def get(self, role_id: str) -> AgentRole | None:
         return self.roles.get(role_id)
