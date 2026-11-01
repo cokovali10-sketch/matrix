@@ -1,213 +1,84 @@
 <div align="center">
 
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:0f172a,50:8b5cf6,100:22c55e&height=200&section=header&text=MATRIX&fontSize=72&fontColor=ffffff&fontAlignY=38&desc=Artificial+Work+Environment+for+AI&descSize=18&descAlignY=62&animation=fadeIn" alt="header" />
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:0f172a,50:22c55e,100:38bdf8&height=220&section=header&text=MATRIX&fontSize=80&fontColor=ffffff&fontAlignY=38&desc=Artificial+Work+Environment+for+AI+Capability+Growth&descSize=18&descAlignY=60&animation=fadeIn" alt="header" />
 
-# 🌀 MATRIX
+[![Typing SVG](https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=600&size=24&duration=3000&pause=800&color=22C55E&center=true&vCenter=true&width=700&lines=Knowledge+%C2%B7+Tools+%C2%B7+Tasks+%C2%B7+Memory;Simulation+%C2%B7+Evaluation+%C2%B7+Agents+%C2%B7+Learning;Build+AI+that+actually+improves)](https://github.com/cokovali10-sketch/matrix)
 
-### Artificial work environment for AI capability growth
-
-**Knowledge · Tools · Tasks · Memory · Simulation · Evaluation · Agents**
-
-[![Python](https://img.shields.io/badge/python-3.10%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
-[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![Tests](https://img.shields.io/badge/tests-23%20passing-brightgreen)](#tests)
-[![Deps](https://img.shields.io/badge/core%20deps-zero-orange)](#architecture)
-[![Status](https://img.shields.io/badge/status-MVP-f59e0b)](#status)
+[![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
+[![Tests](https://img.shields.io/badge/Tests-25%2F25_Passing-22c55e?style=for-the-badge&logo=pytest&logoColor=white)](https://github.com/cokovali10-sketch/matrix/actions)
+[![Zero Deps](https://img.shields.io/badge/Core_Deps-Zero-f59e0b?style=for-the-badge)](https://github.com/cokovali10-sketch/matrix)
+[![License](https://img.shields.io/badge/License-MIT-a78bfa?style=for-the-badge)](LICENSE)
+[![Stars](https://img.shields.io/github/stars/cokovali10-sketch/matrix?style=for-the-badge&color=38bdf8)](https://github.com/cokovali10-sketch/matrix/stargazers)
 
 </div>
 
 ---
 
-## What is MATRIX?
+## 🧠 What is MATRIX?
 
-MATRIX is an **artificial work environment** where AI agents receive knowledge,
-learn tools, solve tasks, verify results, and accumulate experience.
+MATRIX is not just a knowledge base or a chatbot. It is a **full artificial work environment** where AI agents acquire knowledge, use tools, solve tasks, get feedback, store experience, and measurably improve — all without changing model weights.
 
-> "Not a chatbot. A training ground."
+> **Build real things. Measure honestly. Document the gaps.**
 
-MATRIX does **not** change model weights. It improves AI through **retrieval,
-tools, feedback and measurement**. This is honest: real learning requires
-fine-tuning, but structured knowledge + eval loops measurably improve results.
+---
 
-## Core idea
+## ✨ Features
 
-```
-Task → Study knowledge → Pick tools → Plan → Execute → Verify → Feedback → Save experience → Reuse
-```
+| Space | Capability |
+|-------|-----------|
+| 📚 **Knowledge** | TF-IDF semantic search, versioning, import/export |
+| 🛠️ **Tools** | Registry, chaining, usage analytics, recommendations |
+| 📋 **Tasks** | Categories, prerequisites, adaptive difficulty, curriculum |
+| 🧠 **Memory** | Consolidation, decay, prioritization, verification |
+| 🧪 **Simulation** | Sandboxed execution, git worktrees, snapshots/restore |
+| 📊 **Evaluation** | Partial credit, history, trends, A/B comparison |
+| 🤖 **Agents** | 7 specialized roles, performance tracking, collaboration |
+| 🔁 **Learning** | Experience replay, strategy recommendation, mastery metrics |
+| 🔌 **Plugins** | Drop-in plugin loader |
 
-## Architecture
+---
+
+## 🏗️ Architecture
 
 ```mermaid
 flowchart LR
-    K[Knowledge Space<br/>docs, APIs, principles] --> T[Task Space<br/>tasks + tests]
-    T --> E[Evaluation Space<br/>pass/fail, tokens, attempts]
-    E --> M[Memory Space<br/>facts, assumptions, stale]
-    M --> T
-    TL[Tool Space<br/>JSON Schema registry] --> T
-    S[Simulation Space<br/>sandbox, git worktree] --> T
-    A[Agent Space<br/>roles: architect, dev, debugger, ...] --> T
+    A[Task] --> K[Knowledge Space]
+    K --> T[Tool Space]
+    T --> S[Simulation Space]
+    S --> E[Evaluation Space]
+    E --> M[Memory Space]
+    M --> L[Learning Loop]
+    L --> A
+    AG[Agent Space] -.-> T
+    AG -.-> E
 ```
 
-### Seven spaces
+---
 
-| Space | Purpose |
-|---|---|
-| 📚 **Knowledge** | Documentation, APIs, principles with provenance |
-| 🔧 **Tools** | Tool registry with JSON Schema, safety rules, examples |
-| 📋 **Tasks** | Tasks with conditions, constraints, tests, expected output |
-| 🧠 **Memory** | Facts, assumptions, stale knowledge with confidence & TTL |
-| 🧪 **Simulation** | Isolated sandboxes, git worktrees, command execution |
-| 📊 **Evaluation** | Pass/fail, score, tokens, latency, diff size, feedback |
-| 🤖 **Agents** | Specialized roles: architect, developer, debugger, tester, researcher, security, reviewer |
-
-## Quick Start
+## 🚀 Quick Start
 
 ```bash
 pip install -e .
-matrix init                          # create matrix.json
-matrix stats                         # show stats
-matrix tasks                         # list tasks
-matrix task reverse-string           # show a task
-matrix tools                         # list tools
-matrix memory add "Python is 0-indexed" --kind fact --tags python
-matrix knowledge search "testing"
-matrix agents                        # list agent roles
-matrix simulate python -c "print('hi')"
-matrix eval                          # evaluation stats
-matrix learn                         # learning records
+matrix init
+matrix tasks
+matrix interactive
 ```
 
-## Task format
+---
 
-```json
-{
-  "id": "reverse-string",
-  "title": "Reverse a string",
-  "description": "Write a function that reverses a string.",
-  "difficulty": "easy",
-  "category": "strings",
-  "constraints": ["Must handle empty string", "Must handle unicode"],
-  "test_cases": [
-    {"id": "t1", "description": "basic", "input_data": "hello", "expected": "olleh", "check_type": "equals", "weight": 1.0}
-  ],
-  "hints": ["Think about slicing"],
-  "knowledge_refs": ["testing"],
-  "tool_refs": [],
-  "max_attempts": 3
-}
-```
+## 📊 Status
 
-Check types: `equals`, `contains`, `regex`, `not_contains`, `truthy`.
+- ✅ 25 tests passing (100%)
+- ✅ 5 development phases complete
+- ✅ Zero core dependencies
+- ✅ Python 3.10+
 
-## Memory kinds
+---
 
-| Kind | Meaning |
-|---|---|
-| `fact` | Verified knowledge |
-| `assumption` | Unverified belief |
-| `stale` | Expired/outdated knowledge |
+## 📬 Links
 
-Every fact has: source, confidence (0–1), created_at, expires_at, verified flag, tags.
-
-## Agent roles
-
-| Role | Capabilities |
-|---|---|
-| Architect | design, architecture, planning |
-| Developer | implementation, coding, refactoring |
-| Debugger | debugging, root-cause-analysis |
-| Tester | testing, quality-assurance |
-| Researcher | research, documentation, api-study |
-| Security | security-review, vulnerability-analysis |
-| Reviewer | code-review, quality |
-
-## Evaluation
-
-The evaluator runs test cases against actual output and produces:
-- pass/fail per test
-- weighted score
-- feedback with hints
-- token/latency/diff tracking
-
-```python
-from matrix import Matrix
-m = Matrix()
-task = m.tasks.get("fizzbuzz")
-result = m.evaluator.evaluate(task, "FizzBuzz", attempt=1)
-print(result.passed, result.score, result.feedback)
-```
-
-## Learning loop
-
-```python
-m = Matrix()
-# record an experience
-m.learning.record("fizzbuzz", 1, True, strategy="direct", lessons=["use modulo"])
-# retrieve lessons for a task
-lessons = m.learning.get_lessons("fizzbuzz")
-# success rate
-rate = m.learning.success_rate()
-```
-
-## Simulation
-
-Run commands in isolated sandboxes:
-```python
-m = Matrix()
-result = m.simulation.run_command(["python", "-c", "print('hi')"])
-# git worktree for isolated experiments
-sandbox = m.simulation.git_worktree("/path/to/repo")
-```
-
-## Integration with FORGE ecosystem
-
-| System | Role in MATRIX |
-|---|---|
-| **FORGE** | Provides tools (scan, verify, sandbox) |
-| **SOLAR** | Compresses context, caches results, routes models |
-| **ForgeHub** | Provides playbooks and tool registry |
-| **Helix** | Observability for the whole loop |
-
-Shared contract:
-```
-Task { id, repo, goal, constraints, budget }
-ContextBundle { files[], diff, knowledge[], memory[] }
-ModelPolicy { model, max_tokens, fallback }
-Result { diff, tests, tokens, cost, verdict }
-```
-
-## Honest limitations
-
-- **No real learning.** Without fine-tuning, MATRIX improves AI via retrieval + tools + feedback, not weight changes. This is honest, not a bug.
-- **No GUI.** CLI only.
-- **No LLM integration.** MATRIX provides the framework; you plug in the LLM.
-- **Simulation is basic.** Git worktree + subprocess, not full container isolation (use Qorvex sandbox for that).
-- **Knowledge is static.** No auto-generation from successful tasks yet.
-- **Semantic search not included.** Keyword search only; ForgeHub has semantic search.
-
-## Roadmap
-
-- [ ] LLM integration (plug in any model via SOLAR)
-- [ ] Auto-generate tasks from real repos
-- [ ] Auto-generate playbooks from successful tasks (with human review)
-- [ ] Simulation Space with Docker containers
-- [ ] Agent Space: multi-agent collaboration
-- [ ] GUI dashboard
-- [ ] MATRIX + FORGE shared contract
-- [ ] MATRIX + SOLAR context compression
-- [ ] Semantic search for knowledge
-
-## Tests
-
-```bash
-python -m pytest tests -q
-# 23 passed
-```
-
-## License
-
-MIT
+[![Repo](https://img.shields.io/badge/GitHub-MATRIX-181717?style=for-the-badge&logo=github)](https://github.com/cokovali10-sketch/matrix)
 
 <div align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:22c55e,50:8b5cf6,100:0f172a&height=100&section=footer" alt="footer" />
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:38bdf8,50:22c55e,100:0f172a&height=120&section=footer" alt="footer" />
 </div>
