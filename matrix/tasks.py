@@ -80,3 +80,18 @@ class TaskManager:
 
     def to_dict(self, task: Task) -> dict:
         return task.as_dict()
+
+
+    def recommend_next(self, learning_loop=None, category=None):
+        order = {"easy": 0, "medium": 1, "hard": 2, "expert": 3}
+        candidates = self.list(category=category)
+        if learning_loop is not None:
+            mastered = set()
+            for t in candidates:
+                if learning_loop.success_rate(t.id) >= 0.8:
+                    mastered.add(t.id)
+            candidates = [t for t in candidates if t.id not in mastered]
+        if not candidates:
+            return None
+        candidates.sort(key=lambda t: (order.get(t.difficulty, 1), t.id))
+        return candidates[0]

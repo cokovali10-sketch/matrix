@@ -35,6 +35,32 @@ class LearningLoop:
                 lessons.extend(r["lessons"])
         return list(dict.fromkeys(lessons))  # dedup preserving order
 
+    def get_relevant_lessons(self, task_id: str, query: str = "") -> list[str]:
+        """Return lessons relevant to a task, ranked by keyword overlap."""
+        lessons = self.get_lessons()
+        if not lessons:
+            return []
+        q = (query or task_id).lower().split()
+        scored = []
+        for lesson in lessons:
+            low = lesson.lower()
+            score = sum(1 for w in q if w in low)
+            scored.append((score, lesson))
+        scored.sort(key=lambda x: -x[0])
+        return [l for _, l in scored if _ > 0] or lessons[:5]
+
+    def mastery(self, task_id: str) -> dict:
+        records = self.storage.get_learning(task_id=task_id)
+        attempts = len(records)
+        successes = sum(1 for r in records if r["success"])
+        return {
+            "task_id": task_id,
+            "attempts": attempts,
+            "successes": successes,
+            "success_rate": (successes / attempts) if attempts else 0.0,
+            "mastered": attempts >= 3 and (successes / attempts if attempts else 0.0) >= 0.8,
+        }
+
     def get_strategies(self, task_id: str = None) -> list[str]:
         records = self.storage.get_learning(task_id=task_id)
         return list(dict.fromkeys(r["strategy"] for r in records if r["strategy"]))
