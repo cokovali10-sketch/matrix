@@ -60,6 +60,54 @@ class MemorySpace:
     def remove(self, fact_id: str):
         self.storage.delete_memory(fact_id)
 
+    def consolidate(self) -> int:
+        """Merge near-duplicate facts (same lowercased text) keeping highest confidence."""
+        facts = self.storage.get_memory()
+        seen = {}
+        removed = 0
+        for f in facts:
+            key = f["fact"].strip().lower()
+            if key in seen:
+                prev = seen[key]
+                if f["confidence"] > prev["confidence"]:
+                    self.storage.delete_memory(prev["id"])
+                    seen[key] = f
+                else:
+                    self.storage.delete_memory(f["id"])
+                removed += 1
+            else:
+                seen[key] = f
+        return removed
+
+    def decay(self, half_life_days: float = 30.0) -> int:
+        """Reduce confidence of facts not verified; remove if below 0.1."""
+        import math
+        now = time.time()
+        facts = self.storage.get_memory()
+        removed = 0
+        for f in facts:
+            age_days = (now - f["created_at"]) / 86400.0
+            if f["verified"]:
+                continue
+            new_conf = f["confidence"] * math.pow(0.5, age_days / half_life_days)
+            if new_conf < 0.1:
+                self.storage.delete_memory(f["id"])
+                removed += 1
+            else:
+                entry = MemoryFact(
+                    id=f["id"], fact=f["fact"], kind=f["kind"], source=f["source"],
+                    confidence=new_conf, created_at=f["created_at"],
+                    expires_at=f["expires_at"], tags=f["tags"], verified=f["verified"],
+                )
+                self.storage.save_memory(entry)
+        return removed
+
+    def prioritize(self, limit: int = 10) -> list[dict]:
+        """Return top facts by confidence then recency."""
+        facts = self.storage.get_memory()
+        facts.sort(key=lambda f: (-f["confidence"], -f["created_at"]))
+        return facts[:limit]
+
     def stats(self) -> dict:
         all_facts = self.storage.get_memory()
         return {

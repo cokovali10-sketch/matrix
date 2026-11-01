@@ -55,6 +55,7 @@ class Task:
     hints: list[str] = field(default_factory=list)
     knowledge_refs: list[str] = field(default_factory=list)
     tool_refs: list[str] = field(default_factory=list)
+    prerequisites: list[str] = field(default_factory=list)
     max_attempts: int = 3
     timeout_seconds: int = 120
 
@@ -66,6 +67,7 @@ class Task:
             "test_cases": [tc.as_dict() for tc in self.test_cases],
             "expected_output": self.expected_output, "hints": self.hints,
             "knowledge_refs": self.knowledge_refs, "tool_refs": self.tool_refs,
+            "prerequisites": self.prerequisites,
             "max_attempts": self.max_attempts, "timeout_seconds": self.timeout_seconds,
         }
 

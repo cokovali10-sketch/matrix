@@ -51,6 +51,7 @@ class TaskManager:
             hints=data.get("hints", []),
             knowledge_refs=data.get("knowledge_refs", []),
             tool_refs=data.get("tool_refs", []),
+            prerequisites=data.get("prerequisites", []),
             max_attempts=data.get("max_attempts", 3),
             timeout_seconds=data.get("timeout_seconds", 120),
         )
@@ -65,6 +66,22 @@ class TaskManager:
         if category:
             result = [t for t in result if t.category == category]
         return result
+
+    def available(self, completed: set[str] = None) -> list[Task]:
+        """Tasks whose prerequisites are all completed."""
+        completed = completed or set()
+        return [t for t in self.tasks.values()
+                if all(p in completed for p in t.prerequisites)]
+
+    def adapt_difficulty(self, task_id: str, learning_loop) -> str:
+        """Return recommended difficulty for next task based on performance."""
+        m = learning_loop.mastery(task_id) if hasattr(learning_loop, "mastery") else {"success_rate": 0.0}
+        rate = m.get("success_rate", 0.0)
+        if rate >= 0.9:
+            return "hard"
+        if rate >= 0.6:
+            return "medium"
+        return "easy"
 
     def add(self, task: Task):
         self.tasks[task.id] = task

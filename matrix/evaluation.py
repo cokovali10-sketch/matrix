@@ -104,6 +104,31 @@ class Evaluator:
                 lines.append(f"  - {h}")
         return "\n".join(lines)
 
+    def history(self, task_id: str = None) -> list[dict]:
+        evals = self.storage.get_evaluations(task_id=task_id) if False else self.storage.get_evaluations()
+        if task_id:
+            evals = [e for e in evals if e["task_id"] == task_id]
+        return sorted(evals, key=lambda e: e.get("attempt", 0))
+
+    def trend(self, task_id: str) -> dict:
+        evals = self.history(task_id)
+        if not evals:
+            return {"task_id": task_id, "attempts": 0, "improving": False, "scores": []}
+        scores = [e["score"] for e in evals]
+        improving = len(scores) >= 2 and scores[-1] > scores[0]
+        return {"task_id": task_id, "attempts": len(scores),
+                "improving": improving, "scores": scores,
+                "best": max(scores), "latest": scores[-1]}
+
+    def compare_strategies(self, strategy_a: str, strategy_b: str) -> dict:
+        evals = self.storage.get_evaluations()
+        a = [e for e in evals if strategy_a in str(e.get("feedback", ""))]
+        b = [e for e in evals if strategy_b in str(e.get("feedback", ""))]
+        def rate(x):
+            return (sum(1 for e in x if e.get("passed")) / len(x)) if x else 0.0
+        return {"strategy_a": strategy_a, "rate_a": rate(a), "n_a": len(a),
+                "strategy_b": strategy_b, "rate_b": rate(b), "n_b": len(b)}
+
     def stats(self) -> dict:
         evals = self.storage.get_evaluations()
         total = len(evals)

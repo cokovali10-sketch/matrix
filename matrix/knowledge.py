@@ -53,7 +53,37 @@ class KnowledgeSpace:
         return self.storage.get_knowledge(kind=kind, tag=tag)
 
     def search(self, query: str) -> list[dict]:
-        return self.storage.search_knowledge(query)
+        """TF-IDF-ish ranked search over title+content+tags."""
+        import math
+        items = self.storage.get_knowledge()
+        if not items:
+            return self.storage.search_knowledge(query)
+        q_terms = set(query.lower().split())
+        # document frequency
+        df = {}
+        for it in items:
+            text = (it["title"] + " " + it["content"] + " " + " ".join(it.get("tags", []))).lower()
+            for t in set(text.split()):
+                df[t] = df.get(t, 0) + 1
+        n = len(items)
+        scored = []
+        for it in items:
+            text = (it["title"] + " " + it["content"] + " " + " ".join(it.get("tags", []))).lower()
+            toks = text.split()
+            tf = {}
+            for t in toks:
+                tf[t] = tf.get(t, 0) + 1
+            score = 0.0
+            for qt in q_terms:
+                if qt in tf:
+                    idf = math.log((n + 1) / (df.get(qt, 0) + 1)) + 1
+                    score += (tf[qt] / len(toks)) * idf
+            if score > 0:
+                scored.append((score, it))
+        scored.sort(key=lambda x: -x[0])
+        if not scored:
+            return self.storage.search_knowledge(query)
+        return [it for _, it in scored]
 
     def update(self, entry_id: str, content: str):
         existing = self.get(entry_id)
