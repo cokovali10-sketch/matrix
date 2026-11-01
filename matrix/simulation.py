@@ -82,6 +82,30 @@ class SimulationSpace:
             pass
         return None
 
+    def snapshot(self, sandbox_name: str) -> Path | None:
+        """Create a tar.gz snapshot of a sandbox for rollback."""
+        import tarfile
+        sandbox = self.sandbox_dir / sandbox_name
+        if not sandbox.exists():
+            return None
+        snap = self.sandbox_dir / f"{sandbox_name}.tar.gz"
+        with tarfile.open(snap, "w:gz") as tf:
+            tf.add(sandbox, arcname=sandbox_name)
+        return snap
+
+    def restore(self, sandbox_name: str) -> bool:
+        """Restore a sandbox from its snapshot."""
+        import tarfile
+        snap = self.sandbox_dir / f"{sandbox_name}.tar.gz"
+        if not snap.exists():
+            return False
+        target = self.sandbox_dir / sandbox_name
+        if target.exists():
+            shutil.rmtree(target, ignore_errors=True)
+        with tarfile.open(snap, "r:gz") as tf:
+            tf.extractall(self.sandbox_dir)
+        return True
+
     def list_sandboxes(self) -> list[str]:
         if not self.sandbox_dir.exists():
             return []

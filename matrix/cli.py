@@ -162,6 +162,41 @@ def cmd_describe(args) -> int:
     return 0
 
 
+def cmd_interactive(args) -> int:
+    m = _matrix(args)
+    print("MATRIX interactive. Commands: tasks, tools, memory, agents, stats, quit")
+    while True:
+        try:
+            line = input("matrix> ").strip()
+        except (EOFError, KeyboardInterrupt):
+            print()
+            break
+        if not line:
+            continue
+        if line in ("quit", "exit", "q"):
+            break
+        if line == "tasks":
+            for t in m.tasks.list():
+                print(f"{t.id:<30} [{t.difficulty:<7}] {t.title}")
+        elif line == "tools":
+            for t in m.tools.list():
+                print(f"{t.id:<25} {t.name}")
+        elif line == "agents":
+            for r in m.agents.list():
+                print(f"{r.id:<12} {r.name}")
+        elif line == "stats":
+            print(m.describe())
+        elif line == "memory":
+            for f in m.memory.get():
+                print(f"{f['id']:<12} {f['fact'][:60]}")
+        elif line.startswith("recommend"):
+            t = m.tasks.recommend_next(m.learning)
+            print(t.id if t else "none")
+        else:
+            print("unknown command")
+    m.close()
+    return 0
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="matrix", description="MATRIX - AI work environment")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -234,6 +269,9 @@ def build_parser() -> argparse.ArgumentParser:
 
     p = sub.add_parser("learn", help="learning records")
     p.set_defaults(func=cmd_learn)
+
+    p = sub.add_parser("interactive", help="interactive REPL")
+    p.set_defaults(func=cmd_interactive)
 
     return parser
 
