@@ -1,0 +1,8 @@
+{
+  "id": "write_file",
+  "name": "Write file",
+  "description": "Write content to a file",
+  "input_schema": {"type": "object", "properties": {"path": {"type": "string"}, "content": {"type": "string"}}, "required": ["path", "content"]},
+  "safety": ["Overwrites existing files", "Use with care"],
+  "tags": ["io", "write"]
+}

@@ -1,0 +1,8 @@
+{
+  "id": "run_tests",
+  "name": "Run tests",
+  "description": "Run test suite and return results",
+  "input_schema": {"type": "object", "properties": {"command": {"type": "string"}, "cwd": {"type": "string"}}, "required": ["command"]},
+  "safety": ["Executes arbitrary commands in sandbox"],
+  "tags": ["test", "execution"]
+}

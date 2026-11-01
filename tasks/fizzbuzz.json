@@ -1,0 +1,19 @@
+{
+  "id": "fizzbuzz",
+  "title": "FizzBuzz",
+  "description": "Return 'Fizz' for multiples of 3, 'Buzz' for multiples of 5, 'FizzBuzz' for multiples of both, else the number as string.",
+  "difficulty": "easy",
+  "category": "logic",
+  "constraints": ["Must handle 1 to n", "Must return strings"],
+  "test_cases": [
+    {"id": "t1", "description": "fizz", "input_data": 3, "expected": "Fizz", "check_type": "equals", "weight": 1.0},
+    {"id": "t2", "description": "buzz", "input_data": 5, "expected": "Buzz", "check_type": "equals", "weight": 1.0},
+    {"id": "t3", "description": "fizzbuzz", "input_data": 15, "expected": "FizzBuzz", "check_type": "equals", "weight": 1.0},
+    {"id": "t4", "description": "number", "input_data": 7, "expected": "7", "check_type": "equals", "weight": 1.0}
+  ],
+  "hints": ["Use modulo operator", "Check 15 first"],
+  "knowledge_refs": ["testing"],
+  "tool_refs": [],
+  "max_attempts": 3,
+  "timeout_seconds": 30
+}

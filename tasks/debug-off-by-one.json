@@ -1,0 +1,18 @@
+{
+  "id": "debug-off-by-one",
+  "title": "Fix off-by-one error",
+  "description": "The function sum_range(n) should return sum of 1..n but has an off-by-one bug. Fix it.",
+  "difficulty": "easy",
+  "category": "debugging",
+  "constraints": ["Fix the root cause, not the symptom"],
+  "test_cases": [
+    {"id": "t1", "description": "sum 1..5", "input_data": 5, "expected": 15, "check_type": "equals", "weight": 1.0},
+    {"id": "t2", "description": "sum 1..1", "input_data": 1, "expected": 1, "check_type": "equals", "weight": 1.0},
+    {"id": "t3", "description": "sum 1..10", "input_data": 10, "expected": 55, "check_type": "equals", "weight": 1.0}
+  ],
+  "hints": ["Check the range upper bound", "Off-by-one means < vs <="],
+  "knowledge_refs": ["debugging"],
+  "tool_refs": [],
+  "max_attempts": 3,
+  "timeout_seconds": 30
+}

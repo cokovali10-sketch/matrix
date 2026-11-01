@@ -1,0 +1,34 @@
+{
+  "project": "default",
+  "storage": {
+    "db_path": "matrix.db",
+    "knowledge_dir": "knowledge",
+    "tasks_dir": "tasks",
+    "tools_dir": "tools"
+  },
+  "simulation": {
+    "enabled": true,
+    "use_git_worktree": true,
+    "use_docker": false,
+    "timeout_seconds": 120,
+    "sandbox_dir": ".matrix_sandbox"
+  },
+  "evaluation": {
+    "pass_threshold": 1.0,
+    "max_attempts": 3,
+    "track_tokens": true,
+    "track_latency": true
+  },
+  "agent": {
+    "default_role": "developer",
+    "roles": [
+      "architect",
+      "developer",
+      "debugger",
+      "tester",
+      "researcher",
+      "security",
+      "reviewer"
+    ]
+  }
+}

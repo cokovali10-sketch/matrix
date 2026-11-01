@@ -1,0 +1,20 @@
+{
+  "id": "reverse-string",
+  "title": "Reverse a string",
+  "description": "Write a function that reverses a string. Handle empty strings and unicode.",
+  "difficulty": "easy",
+  "category": "strings",
+  "constraints": ["Must handle empty string", "Must handle unicode", "Must not use built-in reverse in a trivial way"],
+  "test_cases": [
+    {"id": "t1", "description": "basic", "input_data": "hello", "expected": "olleh", "check_type": "equals", "weight": 1.0},
+    {"id": "t2", "description": "empty", "input_data": "", "expected": "", "check_type": "equals", "weight": 1.0},
+    {"id": "t3", "description": "single char", "input_data": "a", "expected": "a", "check_type": "equals", "weight": 1.0},
+    {"id": "t4", "description": "unicode", "input_data": "абв", "expected": "вба", "check_type": "equals", "weight": 1.0}
+  ],
+  "expected_output": "olleh",
+  "hints": ["Think about slicing", "Consider edge cases"],
+  "knowledge_refs": ["testing"],
+  "tool_refs": [],
+  "max_attempts": 3,
+  "timeout_seconds": 30
+}
