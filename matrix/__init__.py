@@ -13,6 +13,7 @@ from .simulation import SimulationSpace
 from .storage import Storage
 from .tasks import TaskManager
 from .tools import ToolRegistry
+from .plugins import PluginManager
 
 
 class Matrix:
@@ -28,6 +29,7 @@ class Matrix:
         self.simulation = SimulationSpace(self.storage, sandbox_dir=self.config.simulation.sandbox_dir, timeout=self.config.simulation.timeout_seconds)
         self.agents = AgentSpace()
         self.learning = LearningLoop(self.storage)
+        self.plugins = PluginManager()
 
     def close(self):
         self.storage.close()
